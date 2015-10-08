@@ -17,26 +17,34 @@ namespace imageProcessingTestBed
         public bool IncludeLosersBracket { get; }
         public List<int> MapsToWin { get; set; }
 
+        tournamentLayout()
+        {
+
+        }
+
         private void InitRounds(int nRounds)
         {
 
             int nMatches = Convert.ToInt32((Math.Pow(2.0, nRounds) - 1.0));
             Match[] matchSet = new Match[nMatches];
 
-
-
+            
             //Theres always a final round.
             tLayout.AddVertex(matchSet[0]);
-            int offSet = 1;
-            for (int iRound = 1; iRound <= nRounds; iRound++)
+            int innerCursor = 1;
+            int outerCursor = 2;//Will auto fail for 1 round case.
+            while(outerCursor < nMatches)
             {
-                for (int iMatch = 0; iMatch < offSet; iMatch++)
+                int upperInner = 2 * innerCursor;
+                while(innerCursor < upperInner)
                 {
-                    tLayout.AddVerticesAndEdge(new Edge<Match>(matchSet[iMatch + offSet - 1], matchSet[iMatch + 2 * offSet - 1]));
-                    tLayout.AddVerticesAndEdge(new Edge<Match>(matchSet[iMatch + offSet - 1], matchSet[iMatch + 2 * offSet]));
+                    tLayout.AddVerticesAndEdge(new Edge<Match>(matchSet[innerCursor], matchSet[outerCursor]));
+                    outerCursor++;
+                    tLayout.AddVerticesAndEdge(new Edge<Match>(matchSet[innerCursor], matchSet[outerCursor]));
+                    outerCursor++;
+                    innerCursor++;
                 }
 
-                offSet *= 2; //Proceed by powers of 2 more simply this way.
             }
         }
     }
