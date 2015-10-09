@@ -12,14 +12,27 @@ namespace imageProcessingTestBed
     {
         private AdjacencyGraph<Match, Edge<Match>> tLayout = new AdjacencyGraph<Match, Edge<Match>>();
 
+        private List<Match[]> tLayout =;
+
 
         public int Rounds { get; }
         public bool IncludeLosersBracket { get; }
         public List<int> MapsToWin { get; set; }
 
-        tournamentLayout()
+        tournamentLayout(int nRounds, bool losersBracket = false)
         {
+            Rounds = nRounds;
+            IncludeLosersBracket = losersBracket;
+            InitRounds(nRounds);
+            
 
+            //Earlier rounds to Bo3
+            for( int iMapsToWin = 0; iMapsToWin < nRounds - 1; iMapsToWin++)
+            {
+                MapsToWin.Add(2);
+            }
+            //Set the final round to Bo5
+            MapsToWin.Add(3);
         }
 
         private void InitRounds(int nRounds)
@@ -46,6 +59,14 @@ namespace imageProcessingTestBed
                 }
 
             }
+        }
+
+        private void AddLosersBracket()
+        {
+            int nLosersMatches = Convert.ToInt32((Math.Pow(2.0, Rounds-1) - 1.0));
+            Match[] matchSet = new Match[nLosersMatches];
+
+            tLayout.
         }
     }
 }
