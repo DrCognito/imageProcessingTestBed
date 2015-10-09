@@ -10,9 +10,8 @@ namespace imageProcessingTestBed
 {
     class tournamentLayout
     {
-        private AdjacencyGraph<Match, Edge<Match>> tLayout = new AdjacencyGraph<Match, Edge<Match>>();
-
-        private List<Match[]> tLayout =;
+        public List<Match[]> UpperBracketLayout { get; }
+        public List<Match[]> LowerBracketLayout { get; }
 
 
         public int Rounds { get; }
@@ -23,7 +22,7 @@ namespace imageProcessingTestBed
         {
             Rounds = nRounds;
             IncludeLosersBracket = losersBracket;
-            InitRounds(nRounds);
+            UpperBracket = InitRounds(nRounds);
             
 
             //Earlier rounds to Bo3
@@ -35,38 +34,56 @@ namespace imageProcessingTestBed
             MapsToWin.Add(3);
         }
 
-        private void InitRounds(int nRounds)
+        private List<Match[]> InitRounds(int nRounds)
         {
 
-            int nMatches = Convert.ToInt32((Math.Pow(2.0, nRounds) - 1.0));
-            Match[] matchSet = new Match[nMatches];
+            List<Match[]> tempLayout = new List<Match[]>(nRounds);
 
-            
-            //Theres always a final round.
-            tLayout.AddVertex(matchSet[0]);
-            int innerCursor = 1;
-            int outerCursor = 2;//Will auto fail for 1 round case.
-            while(outerCursor < nMatches)
+
+            //Generate a right to left bracket so finals are on the left.
+            int nMatches = 1; //For keeping track of the 2 powers without math.pow
+            for(int iRound = 0; iRound < nRounds; iRound++)
             {
-                int upperInner = 2 * innerCursor;
-                while(innerCursor < upperInner)
+                for(int iMatch = 0; iMatch < nMatches; iMatch++)
                 {
-                    tLayout.AddVerticesAndEdge(new Edge<Match>(matchSet[innerCursor], matchSet[outerCursor]));
-                    outerCursor++;
-                    tLayout.AddVerticesAndEdge(new Edge<Match>(matchSet[innerCursor], matchSet[outerCursor]));
-                    outerCursor++;
-                    innerCursor++;
+                    tempLayout[iRound][iMatch] = new Match();
+
+                    //Link to previous round!
+                    if(iRound > 0)
+                    {
+                        //Integer division should ensure they link up correctly.
+                        tempLayout[iRound][iMatch].WinPathMatch = tempLayout[iRound-1][iMatch/2];
+                    }
                 }
-
+                nMatches *= 2;
             }
+
+            return tempLayout;
         }
 
-        private void AddLosersBracket()
+        private List<Match[]> AddLosersBracket()
         {
-            int nLosersMatches = Convert.ToInt32((Math.Pow(2.0, Rounds-1) - 1.0));
-            Match[] matchSet = new Match[nLosersMatches];
+            if(Rounds <= 1)
+            {
+                throw new System.IndexOutOfRangeException();
+            }
+            List<Match[]> tempLayout = InitRounds(Rounds - 1);
 
-            tLayout.
-        }
+            int nMatches = 2; //For keeping track of the 2 powers without math.pow
+            for (int iRound = 1; iRound < Rounds - 1; iRound++)
+            {
+                for (int iMatch = 0; iMatch < nMatches; iMatch++)
+                {
+                    //Create links to upper bracket
+                    if (iRound > 0)
+                    {
+                        //Integer division should ensure they link up correctly.
+                        UpperBracketLayout[iRound][iMatch].LosePathMatch = tempLayout[iRound - 1][iMatch / 2];
+                    }
+                }
+                nMatches *= 2;
+            }
+
+            return tempLayout;
     }
 }
