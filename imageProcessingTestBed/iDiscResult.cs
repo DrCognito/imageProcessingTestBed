@@ -7,10 +7,10 @@ using Emgu.CV;
 
 namespace imageProcessingTestBed
 {
-    interface DiscResult
+    interface IDiscResult
     {
         float ProbabilityMatch(Mat inImage);
-        float CompareDiscriminators(DiscResult OtherDiscriminator, Mat inImage);
+        float CompareDiscriminators(IDiscResult OtherDiscriminator, Mat inImage);
         int MeasuredWithWidth();
         int MeasuredWithHeight();
     }
