@@ -10,7 +10,7 @@ namespace imageProcessingTestBed
 {
     class ProcessingTools
     {
-        static System.Drawing.Rectangle findTextEdge<TColor, TDepth>(Mat inImage, TDepth[] channelThresh)
+        public static System.Drawing.Rectangle findTextEdge<TColor, TDepth>(Mat inImage, TDepth[] channelThresh)
             where TColor : struct, IColor
             where TDepth : IComparable<TDepth>, new()
         {

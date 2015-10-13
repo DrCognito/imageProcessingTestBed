@@ -115,7 +115,7 @@ namespace imageProcessingTestBed
         {
             if (Rounds <= 1)
             {
-                throw new System.IndexOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
             List<Match[]> tempLayout = InitRounds(Rounds - 1);
 

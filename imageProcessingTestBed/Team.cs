@@ -9,6 +9,6 @@ namespace imageProcessingTestBed
     class Team
     {
         private List<string> names; //Proper name then nick names.
-        private List<DiscResult> results;
+        private List<IDiscResult> results;
     }
 }
