@@ -13,18 +13,26 @@ namespace imageProcessingTestBed
 
         public int RoundsToWin { get; set; }
 
-        Match()
+        public int ScoreTeam1 { get; set; }
+        public int ScoreTeam2 { get; set; }
+
+        public Match WinPathMatch { get; set; }
+        public Match LosePathMatch { get; set; }
+
+        public Match()
         {
             RoundsToWin = 3;
             Team1 = null;
             Team2 = null;
+            ScoreTeam1 = ScoreTeam2 = 0;
         }
 
-        Match(Team t1, Team t2, int nRounds = 3)
+        public Match(Team t1, Team t2, int nRounds = 3)
         {
             RoundsToWin = nRounds;
             Team1 = t1;
             Team2 = t2;
+            ScoreTeam1 = ScoreTeam2 = 0;
         }
     }
 }
