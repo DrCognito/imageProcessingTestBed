@@ -18,22 +18,22 @@ namespace imageProcessingTestBed.Discriminators
         public float FractionalWidthUncertainty { get; }
         public float FractionalHeightUncertainty { get; }
 
-        const double tightThreshold = 150.0;
-        const double looseThreshold = 120.0;
+        const double tightThreshold = 180.0;
+        const double looseThreshold = 140.0;
         double denominator = Math.Sqrt(2);
 
-        TextSize(Image inImage, double looseThresh = looseThreshold, double tightThresh = tightThreshold)
+        public TextSize(Mat inImage, double looseThresh = looseThreshold, double tightThresh = tightThreshold)
         {
-            textRect = ProcessingTools.findTextEdge<Bgr, double>(inImage.loadedImage, new double[] { tightThresh, tightThresh, tightThresh });
+            textRect = ProcessingTools.findTextEdge<Bgr, double>(inImage, new double[] { tightThresh, tightThresh, tightThresh });
 
-            ImageWidth = inImage.loadedImage.Width;
+            ImageWidth = inImage.Width;
             RelativeWidth = (float)textRect.Width / (float)ImageWidth;
 
-            ImageHeight = inImage.loadedImage.Height;
+            ImageHeight = inImage.Height;
             RelativeHeight = (float)textRect.Height / (float)ImageHeight;
 
             //Use looser rectangle to find the uncertainty.
-            System.Drawing.Rectangle looseRect = ProcessingTools.findTextEdge<Bgr, double>(inImage.loadedImage, new double[] { looseThresh, looseThresh, looseThresh });
+            System.Drawing.Rectangle looseRect = ProcessingTools.findTextEdge<Bgr, double>(inImage, new double[] { looseThresh, looseThresh, looseThresh });
             FractionalWidthUncertainty = (looseRect.Width - textRect.Width) / (float)looseRect.Width;
             FractionalHeightUncertainty = (looseRect.Height - textRect.Height) / (float)looseRect.Height;
         }
@@ -69,7 +69,7 @@ namespace imageProcessingTestBed.Discriminators
 
             float StdDeviations = (ImageRelativeHeight - RelativeWidth) / pixelStdError;
 
-            return (float)Meta.Numerics.Functions.AdvancedMath.Erf(StdDeviations / denominator);
+            return (float)Meta.Numerics.Functions.AdvancedMath.Erfc(Math.Abs(StdDeviations) / denominator);
 
         }
     }
