@@ -12,6 +12,7 @@ using Emgu.CV.Structure;
 using System.Collections;
 using ZedGraph;
 using System.Windows.Forms;
+using imageProcessingTestBed.Discriminators;
 
 namespace imageProcessingTestBed
 {
@@ -71,6 +72,9 @@ namespace imageProcessingTestBed
             var bestRowHisto = new ROOTNET.NTH1I("bestRows", "Top rows by discrimination", 20, 0, 20);
             //newFile.Add(bestRowHisto);
 
+            //Text for comparison. "TEMPO STORM"
+            TextSize textTest = new TextSize(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage));
+
             for(int iImage = 0; iImage < blizzAmericas.Count(); iImage++)
             {
                 Image testc = blizzAmericas.ElementAt(iImage);
@@ -93,6 +97,9 @@ namespace imageProcessingTestBed
                     rowResult[0].Item1, rowResult[0].Item2,
                     rowResult[1].Item1, rowResult[1].Item2,
                     rowResult[2].Item1, rowResult[2].Item2);
+                Console.WriteLine("Probability left {0}, probability right {1}.",
+                    textTest.ProbabilityMatch(leftRegion),
+                    textTest.ProbabilityMatch(rightRegion));
 
             }
 
