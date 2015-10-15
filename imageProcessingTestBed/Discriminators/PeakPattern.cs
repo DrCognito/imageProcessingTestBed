@@ -29,13 +29,15 @@ namespace imageProcessingTestBed.Discriminators
             //Should text a smaller bounding box than the peak finding threshold.
             var textRect = ProcessingTools.findTextEdge<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold });
 
+            //resultList[0] = new BitArray(ImageWidth);
 
-            resultList[0] = ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
-                textRect.Bottom + textRect.Height / 4);
-            resultList[1] = ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
-                textRect.Bottom + textRect.Height / 2);
-            resultList[2] = ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
-                (int)(textRect.Bottom + textRect.Height * 0.75));
+            resultList.Add(ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
+                textRect.Top + textRect.Height / 4));
+            Console.WriteLine(textRect.Top + textRect.Height / 2);
+            resultList.Add(ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
+                textRect.Top + textRect.Height / 2));
+            resultList.Add(ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
+                (int)(textRect.Top + textRect.Height * 0.75)));
         }
 
         public float CompareDiscriminators(IDiscResult OtherDiscriminator, Mat inImage)
@@ -60,26 +62,33 @@ namespace imageProcessingTestBed.Discriminators
             var textRect = ProcessingTools.findTextEdge<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold });
 
 
-            inFileResults[0] = ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
-                textRect.Bottom + textRect.Height / 4);
-            inFileResults[1] = ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
-                textRect.Bottom + textRect.Height / 2);
-            inFileResults[2] = ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
-                (int)(textRect.Bottom + textRect.Height * 0.75));
+            inFileResults.Add(ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
+                textRect.Top + textRect.Height / 4));
+            inFileResults.Add(ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
+                textRect.Top + textRect.Height / 2));
+            inFileResults.Add(ProcessingTools.testLine<Bgr, double>(inImage, new double[] { highThreshold, highThreshold, highThreshold },
+                (int)(textRect.Top + textRect.Height * 0.75)));
 
             float[] DotProduct = new float[] { 0, 0, 0 };
 
             for (int iRow = 0; iRow < 3; iRow++)
             {
+                float MagIn = 0;
+                float MagRes = 0;
                 for (int pixel = 0; pixel < resultList[0].Length; pixel++)
                 {
+                    
                     if (inFileResults[iRow].Length > pixel)
                     {
                         DotProduct[iRow] += Convert.ToInt32(inFileResults[iRow][pixel]) * Convert.ToInt32(resultList[iRow][pixel]);
+
+                        if (inFileResults[iRow][pixel]) { MagIn++; }
+                        if (resultList[iRow][pixel]) { MagRes++; }
                     }
                     else { break; }
                 }
-                DotProduct[iRow] /= resultList[iRow].Length * inFileResults[iRow].Length;
+                double temp = Math.Sqrt(Convert.ToDouble(MagIn)) * Math.Sqrt(Convert.ToDouble(MagRes));
+                DotProduct[iRow] /= (float)temp;
 
             }
 
