@@ -73,7 +73,8 @@ namespace imageProcessingTestBed
             //newFile.Add(bestRowHisto);
 
             //Text for comparison. "TEMPO STORM"
-            TextSize textTest = new TextSize(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage));
+            TextSize textSizeTest = new TextSize(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage));
+            PeakPattern peakPatternTest = new PeakPattern(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage));
 
             for(int iImage = 0; iImage < blizzAmericas.Count(); iImage++)
             {
@@ -93,13 +94,17 @@ namespace imageProcessingTestBed
                 bestRowHisto.Fill(rowResult[1].Item1);
                 bestRowHisto.Fill(rowResult[3].Item1);
 
-                Console.WriteLine("Row {0} with {1}, row {2} with {3}, row {4} with {5}.",
-                    rowResult[0].Item1, rowResult[0].Item2,
-                    rowResult[1].Item1, rowResult[1].Item2,
-                    rowResult[2].Item1, rowResult[2].Item2);
-                Console.WriteLine("Probability left {0}, probability right {1}.",
-                    textTest.ProbabilityMatch(leftRegion),
-                    textTest.ProbabilityMatch(rightRegion));
+                //Console.WriteLine("Row {0} with {1}, row {2} with {3}, row {4} with {5}.",
+                //    rowResult[0].Item1, rowResult[0].Item2,
+                //    rowResult[1].Item1, rowResult[1].Item2,
+                //    rowResult[2].Item1, rowResult[2].Item2);
+                Console.WriteLine("File {0}", tempFileList[iImage]);
+                Console.WriteLine("TextSize Probability left {0}, TextSize probability right {1}.",
+                    textSizeTest.ProbabilityMatch(leftRegion),
+                    textSizeTest.ProbabilityMatch(rightRegion));
+                Console.WriteLine("PeakPattern cosine left {0}, PeakPattern cosine right {1}.",
+                    peakPatternTest.ProbabilityMatch(leftRegion),
+                    peakPatternTest.ProbabilityMatch(rightRegion));
 
             }
 
