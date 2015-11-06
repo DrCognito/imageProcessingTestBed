@@ -74,9 +74,10 @@ namespace imageProcessingTestBed
 
             //Text for comparison. "TEMPO STORM"
             TextSize textSizeTest = new TextSize(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage));
-            PeakPattern peakPatternTest = new PeakPattern(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage));
+            PeakPattern peakPatternTest = new PeakPattern(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage), 200.0);
+            //PeakPattern peakPatternTest2 = new PeakPattern(rightBlizz.getROIImage(blizzAmericas.Last().loadedImage));
 
-            for(int iImage = 0; iImage < blizzAmericas.Count(); iImage++)
+            for (int iImage = 0; iImage < blizzAmericas.Count(); iImage++)
             {
                 Image testc = blizzAmericas.ElementAt(iImage);
                 Mat leftRegion = leftBlizz.getROIImage(testc.loadedImage);
@@ -99,16 +100,16 @@ namespace imageProcessingTestBed
                 //    rowResult[1].Item1, rowResult[1].Item2,
                 //    rowResult[2].Item1, rowResult[2].Item2);
                 Console.WriteLine("File {0}", tempFileList[iImage]);
-                Console.WriteLine("TextSize Probability left {0}, TextSize probability right {1}.",
-                    textSizeTest.ProbabilityMatch(leftRegion),
-                    textSizeTest.ProbabilityMatch(rightRegion));
+                //Console.WriteLine("TextSize Probability left {0}, TextSize probability right {1}.",
+                //    textSizeTest.ProbabilityMatch(leftRegion),
+                //    textSizeTest.ProbabilityMatch(rightRegion));
                 Console.WriteLine("PeakPattern cosine left {0}, PeakPattern cosine right {1}.",
                     peakPatternTest.ProbabilityMatch(leftRegion),
                     peakPatternTest.ProbabilityMatch(rightRegion));
 
             }
 
-            
+
             //CvInvoke.Imshow(win1, testMat);
             //TesseractEngine testOCR = new TesseractEngine("langDat", "eng", Tesseract.EngineMode.Default);
             //testOCR.DefaultPageSegMode(Tesseract.PageSegMode.SingleChar);
@@ -118,13 +119,20 @@ namespace imageProcessingTestBed
 
             //Some numbers from a 720p image in paint for ROI testing.
 
-            //ImageViewer.Show(leftBlizz.getROIImage(outImage), "leftName");
-            //ImageViewer.Show(rightBlizz.getROIImage(outImage), "rightName");
+            //ImageViewer.Show(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage), "leftName");
+            //ImageViewer.Show(rightBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage), "rightName");
 
-            //Mat testProcessing = leftBlizz.getROIImage(outImage);
-            //Mat testProcessingRight = rightBlizz.getROIImage(outImage);
-            //System.Drawing.Rectangle textRegion = findTextEdge(testProcessing);
-            //CvInvoke.Rectangle(testProcessing, textRegion, new Bgr(255, 0, 0).MCvScalar);
+            Mat testProcessing = leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage);
+            Mat testProcessingRight = rightBlizz.getROIImage(blizzAmericas.ElementAt(1).loadedImage);
+
+            System.Drawing.Rectangle textRegion = ProcessingTools.findTextEdge<Bgr, double>(testProcessing, new double[] { 180.0, 180.0, 180.0 });
+            System.Drawing.Rectangle textRegion2 = ProcessingTools.findTextEdge<Bgr, double>(testProcessingRight, new double[] { 180.0, 180.0, 180.0 });
+
+            //CvInvoke.Rectangle(testProcessing, textRegion, new Bgr(0, 0, 255).MCvScalar);
+            //ImageViewer.Show(leftBlizz.getROIImage(blizzAmericas.ElementAt(0).loadedImage), "leftName");
+
+            //CvInvoke.Rectangle(testProcessingRight, textRegion2, new Bgr(0, 0, 255).MCvScalar);
+            //ImageViewer.Show(testProcessingRight, "rightName");
 
 
 
@@ -136,7 +144,7 @@ namespace imageProcessingTestBed
             //{
             //    ImageViewer.Show(iMat);
             //}
-            
+
             Console.ReadKey(); //Wait for return to finish!
             newFile.Write();
             //newFile.Close();
