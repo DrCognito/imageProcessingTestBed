@@ -46,20 +46,31 @@ namespace imageProcessingTestBed
             }
         }
 
-        public int? SeekTimeIndex(TimeSpan inTime)
+        
+        public int? SeekTimeIndex(TimeSpan inTime, out TimeSpan TimeInFile)
         {
-            if(inTime > TotalTime) { return null; }
+            
+            if(inTime > TotalTime)
+            {
+                TimeInFile = new TimeSpan(0, 0, 0);
+                return null;
+            }
 
             TimeSpan TempTime = new TimeSpan(0, 0, 0);
 
             for (int iSegment = 0; iSegment < VideoSegmentsList.Count; iSegment++)
             {
                 TempTime += VideoSegmentsList[iSegment].Item1;
-                if(TempTime >= inTime) { return iSegment; }
+                if(TempTime >= inTime)
+                {
+                    TimeInFile = TempTime - inTime;
+                    return iSegment;
+                }
             }
 
             //This should never happen
             Console.WriteLine("SeekTimeIndex outside of TimeSpan segment return loop.");
+            TimeInFile = new TimeSpan(0, 0, 0);
             return null;
 
         }
